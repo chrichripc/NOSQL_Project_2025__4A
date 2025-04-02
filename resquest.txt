@@ -1,0 +1,31 @@
+afficher 10 films et acteurs jouant dans le  film
+MATCH (a:Actor)-[:ACTED_IN]->(f:Film)
+RETURN a.name, f.title
+LIMIT 10
+
+
+
+# film d'un réalisateur particulier
+MATCH (f:Film)-[:DIRECTED_BY]->(d:Director)
+RETURN f.title, d.name
+LIMIT 5
+
+
+
+#film d'un acteur en particulier
+
+MATCH (a:Actor {name: "Matt Damon"})-[:ACTED_IN]->(f:Film)  
+RETURN f.title AS Film, f.year AS Année
+ORDER BY f.year DES
+
+# Nombre de films par réalisateur sur les 10 premiers
+
+MATCH (f:Film)-[:DIRECTED_BY]->(d:Director)
+RETURN d.name AS Réalisateur, COUNT(f) AS NbFilms
+ORDER BY NbFilms DESC
+LIMIT 10
+
+
+# tous les acteurs ayant joué dans un film en l'occurence, The Deparrted
+MATCH (a:Actor)-[:ACTED_IN]->(f:Film {title: "The Departed"})  
+RETURN a.name AS Acteur

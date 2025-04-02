@@ -1,0 +1,98 @@
+Q1)
+
+ pipeline = [
+    {"$group": {"_id": "$year", "count": {"$sum": 1}}},
+    {"$sort": {"count": -1}},
+    {"$limit": 1}
+]
+result = list(collection.aggregate(pipeline))
+
+
+Q2) count = collection.count_documents({"year": {"$gt": 1999}})
+
+
+
+Q3)pipeline = [
+    {"$match": {"year": 2007}},
+    {"$group": {"_id": None, "avg_votes": {"$avg": "$Votes"}}}
+]
+result = list(collection.aggregate(pipeline))
+
+
+
+Q4)pipeline = [
+    {"$group": {"_id": "$year", "count": {"$sum": 1}}},
+    {"$sort": {"_id": 1}}
+]
+
+Q5) genres = collection.distinct("genre")
+
+Q6) collection.find().sort("Revenue (Millions)", -1).limit(1)
+
+
+Q7) pipeline = [
+    {"$group": {"_id": "$Director", "count": {"$sum": 1}}},
+    {"$match": {"count": {"$gt": 5}}},
+    {"$sort": {"count": -1}}
+]
+result = list(collection.aggregate(pipeline))
+
+Q8)pipeline = [
+    {"$group": {"_id": "$Director", "count": {"$sum": 1}}},
+    {"$match": {"count": {"$gt": 5}}},
+    {"$sort": {"count": -1}}
+]
+result = list(collection.aggregate(pipeline))
+
+Q9)pipeline = [
+    {"$addFields": {"decade": {"$multiply": [{"$floor": {"$divide": ["$year", 10]}}, 10]}}},
+    {"$sort": {"rating": -1}},
+    {"$group": {
+        "_id": "$decade",
+        "top_films": {"$push": {"title": "$title", "rating": "$rating"}}
+    }},
+    {"$project": {
+        "top_3": {"$slice": ["$top_films", 3]}
+    }},
+    {"$sort": {"_id": 1}}
+]
+result = list(collection.aggregate(pipeline))
+
+Q10)pipeline = [
+    {"$addFields": {"decade": {"$multiply": [{"$floor": {"$divide": ["$year", 10]}}, 10]}}},
+    {"$sort": {"rating": -1}},
+    {"$group": {
+        "_id": "$decade",
+        "top_films": {"$push": {"title": "$title", "rating": "$rating"}}
+    }},
+    {"$project": {
+        "top_3": {"$slice": ["$top_films", 3]}
+    }},
+    {"$sort": {"_id": 1}}
+]
+result = list(collection.aggregate(pipeline))
+
+Q11)query = {"Metascore": {"$gt": 80}, "Revenue (Millions)": {"$gt": 50}}
+fields = {"title": 1, "Metascore": 1, "Revenue (Millions)": 1}
+result = list(collection.find(query, fields))
+
+Q12)import pandas as pd
+import matplotlib.pyplot as plt
+
+data = list(collection.find({"Runtime (Minutes)": {"$ne": None}, "Revenue (Millions)": {"$ne": None}},
+                            {"Runtime (Minutes)": 1, "Revenue (Millions)": 1}))
+df = pd.DataFrame(data)
+runtime = df["Runtime (Minutes)"]
+revenue = df["Revenue (Millions)"]
+
+correlation = runtime.corr(revenue)
+
+Q13)pipeline = [
+    {"$addFields": {"decade": {"$multiply": [{"$floor": {"$divide": ["$year", 10]}}, 10]}}},
+    {"$group": {"_id": "$decade", "avg_runtime": {"$avg": "$Runtime (Minutes)"}}},
+    {"$sort": {"_id": 1}}
+]
+result = list(collection.aggregate(pipeline))
+
+
+SUITE à faire avant le 31MARS2025
